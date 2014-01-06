@@ -30,7 +30,6 @@ class Permission extends AbstractPlugin{
             $param = array('cache'=>$cache,'idcache'=>$gid); 
             $this->acl = new Aclbasic($param,$this->getSm());
         }   
-
         $resource = $controller.'/'.$action;
         switch ($resource){     
             
@@ -41,6 +40,9 @@ class Permission extends AbstractPlugin{
             case 'cshelperzfcuser/getpoblaciones': break;
             case 'cshelperzfcuser/activate': break;
             case 'Application\Controller\Index/index': break;
+            case 'Application\Controller\Index/aviso': break;
+            case 'Application\Controller\Index/mecanica': break;
+            case 'Application\Controller\Index/ayuda' : break;
             
             default:  
                 $isa = false;
