@@ -1,0 +1,41 @@
+#Validate{
+	margin-top: 50px;
+	border: 1px solid #FFF;
+	width: 400px;
+	margin: 0 auto;
+	background-color: #CCC;
+	padding: 20px;
+	border-radius: 5px;
+}
+#codigo_activa{
+	text-align: center;
+	width: 350px;
+	margin-bottom: 30px;
+}
+
+#codigo_activacion_submit{
+	width: 100px;
+	height: 30px;
+}
+
+#error_message{
+	width: 400px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+#message{
+	width: 400px;
+	margin: 0 auto;
+}
+
+#active_login{
+	width: 400px;
+	text-align: center;
+	margin: 0 auto;
+	font-size: 1.2em;
+}
+
+#active_login a{
+	color: #FFF;
+}

@@ -1,0 +1,82 @@
+<section style="padding:0px;">
+    <div class="container">
+        <ul class="treemap static">
+            <li class='active'><a href="<?php echo $this->basePath() ?>">Inicio</a></li>
+            <li class='active'><a href="<?php echo $this->basePath('categories') ?>">Catálogos</a></li>
+            <li  class="active"><a href=""><?php echo $this->categoria['name'] ?></a></li>
+        </ul>
+
+        <div class="row jumbotron">
+            <div class="col-lg-12">
+                <h1 class="page-header"><?php echo $this->categoria['name'] ?>.
+                    <small>Elige un artículo.</small>
+                    <div style="float:right" type="button" class="btn btn-default">
+                            <a style="text-decoration: none;" href="<?php echo $this->basePath('categories')?>">Regresar</a>
+                    </div>
+                </h1>
+                <br>
+            </div>
+
+            <div class="row text-center products_container">
+                <?php if (!is_null($this->sample)) : ?>
+                    <?php foreach ($this->sample as $row) : ?>
+                        <?php  $form = $this->form ?>
+                        <?php  $form->setAttribute('action', $this->basePath('carrito/2'))?>
+                        <div class="col-lg-3 col-md-6 hero-feature product">
+                            <?php echo $this->form()->openTag($form) ?>
+                            <div class="thumbnail">
+                                <img width="150px" height="150px" src="<?php echo $this->basePath('assets/img/product/' .$row['sku'].'.jpg');?>" 
+                                     alt="<?php echo $row['other_sku']; ?>">
+                                <div class="caption">
+                                    <h3>
+                                        <?php echo substr($row['other_sku'], 0, 17); ?>
+                                        <?php echo strlen($row['other_sku']) > 20 ? '...': ''?>
+                                    </h3>
+                                    <span class="glyphicon glyphicon-heart-empty"></span> <?php echo $row['price']; ?> <b><?php echo $row['currency']; ?></b>
+                                    <p>
+                                        <center>
+                                            <?php echo $this->formSelect($form->get('quantity')) ?>
+                                        </center>
+                                    </p>
+                                    <p>
+                                        <?php echo $this->formSubmit($form->get('submit')) ?>
+                                        <a href="<?php echo $this->basePath('articulo/'.$this->categoria['id'].'/'. $row['product_id']); ?>" class="btn btn-default">
+                                            Descripción
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                            <?php $form->get('user_id')->setValue($this->user['id']) ?> 
+                            <?php echo $this->formHidden($form->get('user_id')) ?>
+                            <?php $form->get('product_id')->setValue($row['product_id']) ?>
+                            <?php echo $this->formHidden($form->get('product_id')) ?>
+                            <?php $form->get('price')->setValue($row['price']) ?>
+                            <?php echo $this->formHidden($form->get('price')) ?>
+                            <?php echo $this->formHidden($form->get('csrf'))?>
+                            <?php echo $this->form()->closeTag($form) ?>
+                        </div>
+                        
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+
+            <div style="clear:both"></div>
+
+
+<?php echo ( count($this->sample) > 0 ) ? $this->paginationControl($this->sample, 'Sliding', 'csproductcmf/index/pager.phtml') : ""; ?>
+        </div>
+    </div>
+
+
+</section> <!-- /container -->
+
+<style>    
+    .caption h3{
+        height: 55px;
+    }
+    .breadcrumb{
+        margin-top: -30px;
+    }
+</style>
+
+

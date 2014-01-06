@@ -1,0 +1,25 @@
+.treemap{
+    height: 20px;
+
+}
+.static{
+        height: 30px;
+}.static li{
+    
+}
+.treemap li, .treemap ul{
+    height: 20px;
+    display: inline-block;
+    vertical-align: top;
+}
+.treemap ul{
+    margin-left: -15px;
+}
+.treemap li a{
+    padding-right: 10px;
+    border-right: 5px solid #0081c2;
+}
+
+#oculto{ visibility:hidden}
+
+

@@ -1,0 +1,55 @@
+<section class="container">
+    <h1 class="page-header">Estado de Cuenta. <small>Aquí está el desglose de tus joyas.</small></h1>
+
+    <div class="jumbotron">
+        <ul class="list-group">
+            <li class="list-group-item"> <h3>Nombre: <small><?php echo $this->user['displayName'] ?></small></h3></li>
+            <li class="list-group-item">
+                <h3>Dirección: 
+                    <small>
+                        <?php 
+                              echo array_key_exists('calle', $this->receptor) ? $this->receptor['calle'] : '';
+                              echo array_key_exists('no_exterior', $this->receptor) ?' #'.$this->receptor['no_exterior'] : '';
+                              echo array_key_exists('no_interior', $this->receptor) ?' Int. #'.$this->receptor['no_interior'] : '';
+                        ?>
+                    </small>
+                </h3>
+            </li>
+            <li class="list-group-item"><h3>Email: <small><?php echo $this->user['email'] ?></small></h3></li>
+
+        </ul>
+
+        <h2 class="page-header">Puntos.</h2>     
+
+        <ul class="list-group" style="font-family: arial;">
+            <li class="list-group-item">
+                <span class="badge"><?php echo $this->credits ?></span>
+                <span class="glyphicon glyphicon-heart-empty"></span>&nbsp;<b> Acumulados</b>
+            </li>
+            <li class="list-group-item">
+                <span class="badge"><?php echo $this->payments ?></span>
+                <span class="glyphicon glyphicon-heart-empty"></span>&nbsp;<b> Cajeados</b>
+            </li>
+            <li class="list-group-item">
+                <span class="badge"><?php echo $this->actuales ?></span>
+                <span class="glyphicon glyphicon-heart-empty"></span>&nbsp;<b> Actuales</b>
+            </li>
+
+        </ul>
+
+    </div>
+
+
+    <br>
+
+    <div class="jumbotron">
+        <center>
+            <p>Síguenos en nuestras redes sociales.</p>
+            <a href="#about"><img src="assets/img/fbk.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="#contact"><img src="assets/img/twi.png"></a><br>
+
+            <a href="#about">Instrucciones para la APP</a>&nbsp;&nbsp; | &nbsp;&nbsp;
+            <a href="#contact">Términos y condiciones</a>
+        </center>
+    </div>
+</section> <!-- /container -->

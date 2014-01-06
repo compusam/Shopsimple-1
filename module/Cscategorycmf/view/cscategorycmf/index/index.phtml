@@ -1,0 +1,23 @@
+<section style="padding:30px;">
+    <div class="container">
+    <div class="row jumbotron">
+        <div class="col-lg-12">
+            <h1 class="page-header">Catálogo.
+                <small>Elige una categoría.</small></h1>
+            <br>
+        </div>
+        <div class="row">
+            <?php foreach ($this->categories as $category):?> 
+            <div class="cat col-lg-4 col-sm-6">
+            <center><a href="<?php echo $this->basePath('productsc/'.
+            $category['id']); ?>"> 
+            <img  title="<?php echo $category['name']; ?>" 
+                  class="img-circle img-responsive" 
+                  src="<?php echo $this->basePath('assets/img/'.
+                $category['thumb_img']); ?>"></a> </center>
+            </div>
+            <?php endforeach;?>  
+        </div>
+    </div>
+    </div>
+</section> <!-- /container -->

@@ -1,0 +1,68 @@
+<?php echo $this->doctype(); ?>
+
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->headTitle('Programa'); ?>
+
+        <?php echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0') ?>
+        <?php echo $this->headMeta()->appendName('description', 'Concurso de Autoservicio') ?>
+
+        <!-- Le styles -->
+        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/assets/ico/favicon.ico'))
+                        ->prependStylesheet($this->basePath() . '/assets/css/bootstrap.css')
+                        ->prependStylesheet($this->basePath() . '/assets/css/navbar.css')
+                        ->prependStylesheet($this->basePath() . '/assets/css/carousel.css') ?>
+
+        <!-- Scripts -->
+        <?php echo $this->headScript()->prependFile($this->basePath() . '/assets/js/html5shiv.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+                                      ->prependFile($this->basePath() . '/assets/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))  
+                                      ->prependFile($this->basePath() . '/assets/js/jquery.steps.js')
+                                      ->prependFile($this->basePath() . '/assets/js/jquery.js') ?>
+      <style> 
+          @font-face
+            {
+                font-family: "bebasneue";
+                src: url("<?php echo $this->basePath()?>/assets/fonts/BebasNeue.otf") format("opentype");
+                src: url("<?php echo $this->basePath()?>/assets/fonts/BebasNeue.eot?#bebasneue") format("embedded-opentype"),
+                    url("<?php echo $this->basePath()?>/assets/fonts/BebasNeue.woff") format("woff"),
+                    url("<?php echo $this->basePath()?>/assets/fonts/BebasNeue.ttf") format("truetype");
+            }
+        
+      </style>        
+
+    </head>
+    <body class="headeri">
+
+  <?php echo $this->content; ?>      
+ <div id="footer" class="navbar-fixed-bottom" style="padding:0px; background-color: #101010;">
+      <div>
+        <div style="width: 760px;margin: 0 auto;">
+    <div>
+         <div id="foo_img" style="float:left;">
+             <img src="<?php echo $this->basePath()?>/assets/img/adventa.png">
+         </div><div id="foo_img" style="float:right;">
+             <img src="<?php echo $this->basePath()?>/assets/img/adbox.png">
+         </div>
+         <div style="clear: both"></div>
+     </div>
+     <div style="clear: both"></div>
+     <center> 
+         <div style="font-size:10px; width:97%;color:#fff;">
+             D.R. © Copyright 2013.  Derechos Reservados.  Adventa y Adbox son marcas registradas de Publigraphics S.A. de C.V.  Quedan reservados todos los derechos de edición, copia o reproducción parcial o total. <b>
+             <a href="<?php echo $this->basePath()?>/assets/tercon/ter_y_cond.pdf" target="_blank" style="color:#FFF;">Aviso de Privacidad</a>
+             </b>
+         </div>
+     </center>
+     </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="<?php echo $this->basePath()?>/assets/js/jquery.js"></script>
+    <script src="<?php echo $this->basePath()?>/assets/js/bootstrap.min.js"></script>        
+    </body>
+</html>
+

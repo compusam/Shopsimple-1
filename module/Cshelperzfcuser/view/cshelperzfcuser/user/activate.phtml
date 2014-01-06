@@ -1,0 +1,23 @@
+<section class='container'>
+	<div class='content clearfix'>
+		<?php $form = $this->form ?>
+		<?php $form->setAttribute('action', $this->basePath('usuarios/activate')); ?>
+
+		<?php echo $this->form()->openTag($form) ?>
+			
+			<?php echo $this->formLabel($form->get('codigo_activa')) ?>
+			<?php echo $this->formElement($form->get('codigo_activa')) ?>
+
+			<?php echo $this->formSubmit($form->get('submit')) ?>
+			<?php echo $this->formHidden($form->get('csrf')) ?>
+		<?php echo $this->form()->closeTag() ?>
+		<div id='error_message'><?php echo $this->error_message ?></div>
+		<?php if($this->success): ?> 
+			<div id="active_login">
+				Tu cuenta ha sido validada, ahora puedes ingresar <br>
+				<a href='<?php echo $this->basePath('usuarios/login') ?>'>aquí</a>
+			</div>
+		<?php endif; ?>
+	</div>
+</section>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->basePath('css/activate_user_form.css') ?>">

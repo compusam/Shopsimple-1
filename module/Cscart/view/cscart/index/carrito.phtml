@@ -1,0 +1,73 @@
+<section class="container">
+    <h1 class="page-header">Carrito. <small>Aquí puedes mirar lo que pretendes canjear.</small></h1>
+
+    <div class="jumbotron">
+        <center>
+            <div class="table-responsive">                   
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Foto</th>
+                            <th>Producto</th>
+                            <th>Código</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Eliminar</th>
+                            <th>Sub-total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $total = 0; ?> 
+                        <?php foreach ($this->allcart as $row) : ?>                 
+                            <tr>
+                                <td class="minicat"><img src="<?php echo $this->basePath('assets/img/product/' . $row['thumb_image']); ?>"></td>
+                                <td><?php echo $row['other_sku']; ?></td>
+                                <td><?php echo $row['sku']; ?></td>
+                                <td><?php echo number_format($row['price'], 0, '.', ','); ?></td>
+                                <td><?php echo $row['quantity']; ?></td>
+                                <td>
+                        <center>
+                            <form action="<?php echo $this->basePath('carrito/1'); ?>" 
+                                  method="POST" name="delete" style="display: inline;">
+                                <button id="btn_delete_product" type="submit" style="background: transparent; border: 0; color: #f5f5f5 "><span class="glyphicon glyphicon-remove-circle"></span></button>
+                                <input type="hidden" name="user_id" value="<?php echo $row['user_id']; ?>" />
+                                <input type="hidden" name="product_id" value="<?php echo $row['product_id']; ?>" />
+                            </form>                            
+                        </center>
+
+                        </td>
+                        <td><?php echo number_format($row['line_total'], 0, '.', ','); ?></td>
+                        </tr>
+                        <?php $total +=$row['line_total']; ?> 
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div> 
+            <div class="alert alert-info"><h2><b>Total:</b> <?php echo number_format($total, 0, '.', ','); ?></h2></div> 
+        </center>
+        <div align="right">
+            <a href='<?php echo $this->basePath('categories') ?>' type="button" class="btn btn-primary">Agregar más premios</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a class="btn btn-danger" href="<?php echo $this->basePath('checkout'); ?>">Checkout</a>
+            <br><br>
+        </div>
+        <?php if ($this->credits['credit'] < $total): ?>
+            <center><div class="alert alert-danger">¡No tienes puntos suficientes para canjear!</div></center>
+        <?php endif; ?>
+
+    </div>
+
+
+    <br>
+
+    <div class="jumbotron">
+        <center>
+            <p>Síguenos en nuestras redes sociales.</p>
+            <a href="#about"><img src="<?php echo $this->basePath(); ?>/assets/img/fbk.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="#contact"><img src="<?php echo $this->basePath(); ?>/assets/img/twi.png"></a><br>
+
+            <a href="#about">Instrucciones para la APP</a>&nbsp;&nbsp; | &nbsp;&nbsp;
+            <a href="#contact">Términos y condiciones</a>
+        </center>
+    </div>
+
+</section> <!-- /container -->

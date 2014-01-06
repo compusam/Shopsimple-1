@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Adminpcs</title>
+    <title></title>            <style type="text/css">
+<!--
+    @import "/adminpcs21/public/js/dojo/dijit/themes/claro/claro.css";
+    @import "js/dojo/dojo/resources/dojo.css";
+    @import "css/resetadmin.css";
+    @import "js/dojo/dojox/grid/enhanced/resources/claro/EnhancedGrid.css";
+    @import "js/dojo/dojox/form/resources/CheckedMultiSelect.css";
+    @import "js/dojo/dojox/grid/enhanced/resources/EnhancedGrid_rtl.css";
+-->
+</style>
+
+<script type="text/javascript" src="/adminpcs21/public/js/dojo/dojo/dojo.js"></script>
+
+<script type="text/javascript">
+//<!--
+dojo.require("dijit.form.Button");
+    dojo.require("dojox.grid.EnhancedGrid");
+    dojo.require("dijit.form.ComboButton");
+    dojo.require("dijit.layout.TabContainer");
+    dojo.require("dijit.layout.ContentPane");
+    dojo.require("dojox.grid.enhanced.plugins.Pagination");
+    dojo.require("dojox.grid.enhanced.plugins.Filter");
+    dojo.require("dojox.data.CsvStore");
+    dojo.require("dojox.grid.enhanced.plugins.exporter.CSVWriter");
+    dojo.require("dojox.grid.enhanced.plugins.IndirectSelection");
+    dojo.require("dojo.data.ItemFileReadStore");
+    dojo.require("dojo.data.ItemFileWriteStore");
+    dojo.require("dijit.ProgressBar");
+    dojo.require("dojo.io.iframe");
+    dojo.require("dijit.Toolbar");
+    dojo.require("dijit.Dialog");
+    dojo.require("dijit.form.ComboBox");
+    dojo.require("dijit.form.SimpleTextarea");
+    dojo.require("dijit.form.Form");
+    dojo.require("dijit.form.FilteringSelect");
+    dojo.require("dojo.parser");
+dojo.addOnLoad(function() {
+paramStore = new dojo.data.ItemFileReadStore({"url":"tracsa\/reportes\/readsuc"});
+
+});
+    dojo.addOnLoad(function() {
+    dojo.forEach(zendDijits, function(info) {
+        var n = dojo.byId(info.id);
+        if (null != n) {
+            dojo.attr(n, dojo.mixin({ id: info.id }, info.params));
+        }
+    });
+    dojo.parser.parse();
+});
+    dojo.addOnLoad(function(){ var tracsa_premia_submenu=new dijit.Menu({id:"tracsa_premia_submenu"}); var reportes=new dijit.MenuItem({label: "Reportes",iconClass:"commonIcons dijitIconTable",onClick:function(){buidNewTab("c6bc1e6d","Reportes","var toolbar_c6bc1e6d = new dijit.Toolbar({},'toolbar_c6bc1e6d'); var button_f659c0b0  = new dijit.form.Button({ label: \"Nuevo\", iconClass: \"dijitEditorIcon dijitEditorIconNewPage\", onClick: function(){dijit.byId('tracsaNewTemplateMainDialogModreportes').show()} });toolbar_c6bc1e6d.addChild(button_f659c0b0);var button_24fc3f23  = new dijit.form.Button({ label: \"Descargar\", iconClass: \"commonIcons dijitIconConnector\", onClick: function(){getReporte(\"grid_c6bc1e6d\",\"tracsa\",\"reportes\",layoutReportes,\"divgrid_c6bc1e6d\")} });toolbar_c6bc1e6d.addChild(button_24fc3f23);var button_c9de903d  = new dijit.form.Button({ label: \"Actualizar Grid\", iconClass: \"commonIcons dijitIconUndo\", onClick: function(){reloadGrid(\"grid_c6bc1e6d\",\"divgrid_c6bc1e6d\",\"tracsa/reportes\",layoutReportes)} });toolbar_c6bc1e6d.addChild(button_c9de903d);","tracsa/reportes/index","var layout_c6bc1e6d = [[{field:'id',name:'Id',width:'50px'},{field:'concepto',name:'Concepto',width:'200px'},{field:'estado',name:'Estado',width:'50px'},{field:'fecha',name:'Fecha',width:'150px'}]];");}}); tracsa_premia_submenu.addChild(reportes);var tracsa_premia_ComboButton=new dijit.form.ComboButton({optionsTitle:"Tracsa Premia",iconClass: "dijitFolderOpened",label: "Tracsa Premia",dropDown: tracsa_premia_submenu,onClick:function(){return false}},"tracsa_premia"); tracsa_premia_ComboButton.startup(); tracsa_premia_submenu.startup();});
+var paramStore;
+    var zendDijits = [{"id":"salir","params":{"iconClass":"dijitEditorIcon dijitEditorIconUnlink","onclick":"location.href=\"\/appadminpcs\/public\/usuarios\/logout\";","dojoType":"dijit.form.Button"}},{"id":"mainToolBar","params":{"region":"top","dojoType":"dijit.Toolbar"}},{"id":"tracsaNewTemplateMainDialogModreportes","params":{"title":"Crear Reporte","dojoType":"dijit.Dialog"}},{"id":"modreportestracsaNew-concepto","params":{"autocomplete":"false","required":"true","dojoType":"dijit.form.ComboBox"}},{"id":"modreportestracsaNew-helperparams","params":{"required":"false","dojoType":"dijit.form.Button"}},{"id":"modreportestracsaNew-params","params":{"required":"true","dojoType":"dijit.form.SimpleTextarea"}},{"id":"modreportestracsaNew-guardaJson","params":{"required":"false","dojoType":"dijit.form.Button"}},{"id":"modreportestracsaNew-cancelarJson","params":{"required":"false","dojoType":"dijit.form.Button"}},{"id":"modreportestracsaNew-ContentPane","params":{"title":"","dojoType":"dijit.layout.ContentPane"}},{"id":"modreportestracsanew","params":{"dojoType":"dijit.form.Form"}},{"id":"tracsaNewTemplateMainDialogParams","params":{"title":"Ayuda con Parametros","dojoType":"dijit.Dialog"}},{"id":"paramsNew-concepto","params":{"store":"paramStore","searchAttr":"name","required":"true","dojoType":"dijit.form.FilteringSelect"}},{"id":"paramsNew-params","params":{"required":"true","dojoType":"dijit.form.SimpleTextarea"}},{"id":"paramsNew-agregar","params":{"required":"false","dojoType":"dijit.form.Button"}},{"id":"paramsNew-cerrar","params":{"required":"false","dojoType":"dijit.form.Button"}},{"id":"paramsNew-ContentPane","params":{"title":"","dojoType":"dijit.layout.ContentPane"}},{"id":"paramsnew","params":{"dojoType":"dijit.form.Form"}}];
+//-->
+
+</script><script type="text/javascript">
+//<!-- 
+var baseUrl = "/adminpcs21/public" ;
+var preoloader = 
+     '<div id="preloader"><div id="preloaderContent" style="visibility:hiden;">'+
+        '<img width="20px"  height="20px" src="'+baseUrl+
+        '/js/dojo/dojox/image/resources/images/loading.gif">'+
+        '<strong> Cargando...</strong></div></div>';
+var n = dojo.place(preoloader, dojo.body());
+        var ps = dojo.position(n);
+        var ws = dojo.window.getBox();
+        dojo.style(dojo.byId("preloaderContent"), "top" , (ws.h/2-ps.h/2)+"px");
+        dojo.style(dojo.byId("preloaderContent"), "left", (ws.w/2-ps.w/2)+"px");
+        dojo.style(dojo.byId("preloaderContent"), "visibility" , "visible");             
+//-->
+
+</script>    
+    <script type="text/javascript" src="/adminpcs21/public/js/layer/script/script24.js"></script></head>
+<body class="claro">
+    
+<div id="mainToolBar"><button id="tracsa_premia"></button><button name="salir" id="salir" type="button" value="Salir">Salir</button></div>
+<div style="width: 100%; height: 300px;">
+            <div id="ContenedorPrincipal">
+            </div></div><div id="tracsaNewTemplateMainDialogModreportes"><form id="modreportestracsanew" name="modreportestracsanew" style="width:220px;height:300px"><dl class="zend_form_dojo">
+<div name="modreportestracsaNew" id="modreportestracsaNew-ContentPane"><dl>
+<dt id="modreportestracsaNew-id-label">&#160;</dt>
+<dd id="modreportestracsaNew-id-element">
+<input type="hidden" name="modreportestracsaNew[id]" value="" id="modreportestracsaNew-id"></dd>
+<div><dt id="modreportestracsaNew-concepto-label"><label for="modreportestracsaNew-concepto" class="required">Concepto</label></dt>
+<dd>
+<select name="modreportestracsaNew[concepto]" id="modreportestracsaNew-concepto" trim="1">
+    <option value="0"></option>
+    <option value="1">Reporte_Facturas_por_Sucursal</option>
+    <option value="2">Canjes</option>
+    <option value="3">Clientes</option>
+    <option value="4">Vendedores</option>
+</select></dd></div>
+<dt id="helperparams-label">&#160;</dt><dd id="helperparams-element">
+<button name="modreportestracsaNew[helperparams]" id="modreportestracsaNew-helperparams" type="button">Ayuda para Llenar Parametros</button></dd>
+<div><dt id="modreportestracsaNew-params-label"><label for="modreportestracsaNew-params" class="required">Parametros</label></dt>
+<dd>
+<textarea trim="1" id="modreportestracsaNew-params" name="modreportestracsaNew[params]"></textarea>
+</dd></div>
+<div><dt id="guardaJson-label">&#160;</dt><dd id="guardaJson-element">
+<button name="modreportestracsaNew[guardaJson]" id="modreportestracsaNew-guardaJson" type="button">Guardar</button></dd></div>
+<div><dt id="cancelarJson-label">&#160;</dt><dd id="cancelarJson-element">
+<button name="modreportestracsaNew[cancelarJson]" id="modreportestracsaNew-cancelarJson" type="button" onClick='cancelar("modreportestracsanew","tracsaNewTemplateMainDialogModreportes")'>Cancelar</button></dd></div></dl></div>
+</dl></form></div>
+<div id="tracsaNewTemplateMainDialogParams"><form id="paramsnew" name="paramsnew" style="width:220px;height:300px"><dl class="zend_form_dojo">
+<div name="paramsNew" id="paramsNew-ContentPane"><dl>
+<dt id="paramsNew-id-label">&#160;</dt>
+<dd id="paramsNew-id-element">
+<input type="hidden" name="paramsNew[id]" value="" id="paramsNew-id"></dd>
+<div><dt id="paramsNew-concepto-label"><label for="paramsNew-concepto" class="required">Concepto</label></dt>
+<dd>
+<input options="" listsep="&lt;br /&gt;" id="paramsNew-concepto" name="paramsNew[concepto]" value="" type="text"></dd></div>
+<div><dt id="paramsNew-params-label"><label for="paramsNew-params" class="required">Parametros</label></dt>
+<dd>
+<textarea trim="1" id="paramsNew-params" name="paramsNew[params]"></textarea>
+</dd></div>
+<div><dt id="agregar-label">&#160;</dt><dd id="agregar-element">
+<button name="paramsNew[agregar]" id="paramsNew-agregar" type="button">Agregar</button></dd></div>
+<div><dt id="cerrar-label">&#160;</dt><dd id="cerrar-element">
+<button name="paramsNew[cerrar]" id="paramsNew-cerrar" type="button">Cerrar</button></dd></div></dl></div>
+</dl></form></div>
+   
+
+    
+</body>
+</html>

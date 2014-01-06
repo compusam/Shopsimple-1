@@ -1,0 +1,25 @@
+
+<?php $total = 0;?>
+<div class="hero-unit">
+<table class="table">
+  <thead>
+    <tr>
+      <th>Mes</th>
+      <th>Puntos</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php foreach ($this->credit_history as $credits):?>  
+    <tr>
+      <td><?php echo $this->escapeHtml($credits['name_period']) ?></td>
+      <td><?php echo $credits['credits'] ?></td>
+    </tr>
+    <?php $total += $credits['credits'];?> 
+    <?php endforeach;?>
+    <tr>
+      <td>Total</td>
+      <td><?php echo $total;?></td>
+    </tr>
+  </tbody>
+</table>
+</div>    

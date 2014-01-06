@@ -1,0 +1,25 @@
+<?php
+$url = $this->basePath('productsc');
+$cat = $this->Categoryhelper();
+?>
+<?php if ($this->pageCount): ?>
+<center>
+    <ul class="pagination">
+        <li<?php echo (isset($this->previous)) ? '' : " class='active'"; ?>>
+            <a href="<?php echo $url.'/'.$cat.'/1'; ?>">Principio</a></li>
+        <li<?php echo (isset($this->previous)) ? '' : " class='active'"; ?>>
+            <a href="<?php echo $url.'/'.$cat.'/'.$this->previous; ?>">Anterior</a></li>
+      <?php foreach ($this->pagesInRange as $page): ?>  
+          <li<?php echo ($page != $this->current) ? '' : " class='active'"; ?>>
+              <a href="<?php echo $url.'/'.$cat.'/'.$page; ?>"><?php echo $page; ?></a>
+          </li>
+      <?php endforeach; ?>
+        <li<?php echo (isset($this->next)) ? '' : " class='active'"; ?>>
+            <a href="<?php echo $url.'/'.$cat.'/'.$this->next; ?>" 
+               title="Siguiente"> Siguiente</a></li>
+      <li<?php echo (isset($this->next)) ? '' : " class='active'"; ?>>
+          <a href="<?php echo $url.'/'.$cat.'/'.$this->pageCount; ?>"  
+             title="Fin"> Ultimo</a></li>
+    </ul>
+</center>
+<?php endif; ?>

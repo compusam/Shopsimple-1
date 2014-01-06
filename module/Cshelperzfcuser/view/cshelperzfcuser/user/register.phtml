@@ -1,0 +1,201 @@
+<?php
+$this->layout()->setTemplate('cshelperzfcuser/user/layoutregiter.phtml');
+$this->layout()->setTerminal(true);
+?>
+
+
+<?php
+if (!$this->enableRegistration) {
+    print "Registration is disabled";
+    return;
+}
+$form = $this->registerForm;
+$form->prepare();
+$form->setAttribute('action', $this->url('cshelperzfcuser/register'));
+$form->setAttribute('method', 'post');
+$form->setAttribute('id', 'form-2');
+$form->setAttribute('novalidate', 'novalidate');
+$form->get('username')->setLabel('Usuario *');
+$form->get('username')->setAttribute('id', 'username');
+$form->get('email')->setLabel('E-mail *');
+$form->get('display_name')->setLabel('Nombre *');
+$form->get('display_name')->setAttribute('id', 'display_name');
+$form->get('password')->setLabel('Contraseña *');
+$form->get('password')->setAttribute('id', 'password');
+$form->get('passwordVerify')->setLabel('Confirmar contraseña *');
+$form->get('passwordVerify')->setAttribute('id', 'passwordVerify');
+$form->get('email')->setAttribute('id', 'email');
+$submit = $form->get('submit');
+$submit->setAttribute('class', 'btn btn-primary');
+$submit->setAttribute('id', 'submit');
+$submit->setValue('Guardar');
+?>
+<div class="container" style="padding:30px;">
+    <div id="spinner" class="spinner" style="display:none;">
+        <img id="img-spinner" src='<?php echo $this->basePath("img/ajax-loader.gif") ?>' alt="Loading"/>
+    </div>
+    <section id="basic-form">
+        <h2 class="page-header">Registro</h2>
+        <h3>Puedes registrar tus datos.</h3>
+        <?php echo $this->form()->openTag($form) ?>
+        <div id="wizard">
+            <h2>Cuenta</h2>
+            <section>        
+                <p/>  
+                <div class="col">     
+                    <?php echo $this->formLabel($form->get('username')) ?>
+                    <?php echo $this->formInput($form->get('username')) . $this->formElementErrors($form->get('username')) ?>
+                    <div id='error_username' class='input_error'></div>
+
+                    <?php echo $this->formLabel($form->get('email')) ?>
+                    <?php echo $this->formInput($form->get('email')) . $this->formElementErrors($form->get('email')) ?>
+                    <div id='error_email' class='input_error'></div>
+
+                    <?php echo $this->formLabel($form->get('display_name')) ?>
+                    <?php echo $this->formInput($form->get('display_name')) . $this->formElementErrors($form->get('display_name')) ?>
+                    <div id='error_display_name' class='input_error'></div>
+
+                    <?php echo $this->formLabel($form->get('password')) ?>
+                    <?php echo $this->formInput($form->get('password')) .$this->formElementErrors($form->get('password')) ?>
+                    <div id="result"></div>
+                    
+                    <?php echo $this->formLabel($form->get('passwordVerify')) ?>
+                    <?php echo $this->formInput($form->get('passwordVerify')) . $this->formElementErrors($form->get('passwordVerify')) ?>
+
+                    <?php if ($this->redirect): ?>
+                        <input type="hidden"  name="redirect" value="<?php echo $this->escapeHtml($this->redirect) ?>" />
+                    <?php endif ?>       
+                </div>
+                <div id="errorMessage1" class="errorMessage"></div>
+            </section> 
+
+
+            <h2>Datos de Facturación</h2>
+            <section>
+                <p>     <div class="col">
+                    <?php echo $this->formLabel($form->get('receptor_rfc')) ?>
+                    <?php echo $this->formInput($form->get('receptor_rfc')) . $this->formElementErrors($form->get('receptor_rfc')) ?>
+                    <div id='error_receptor_rfc' class='input_error'></div>
+
+                    <?php echo $this->formLabel($form->get('receptor_nombre')) ?>
+                    <?php echo $this->formInput($form->get('receptor_nombre')) . $this->formElementErrors($form->get('receptor_nombre')) ?>
+                    <div id='error_receptor_nombre'></div>
+
+                    <?php echo $this->formLabel($form->get('receptor_calle')) ?>
+                    <?php echo $this->formInput($form->get('receptor_calle')) . $this->formElementErrors($form->get('receptor_calle')) ?>
+                    <div id='error_receptor_calle' class='input_error'></div>
+
+                    <?php echo $this->formLabel($form->get('receptor_noexterior')) ?>
+                    <?php echo $this->formInput($form->get('receptor_noexterior')) . $this->formElementErrors($form->get('receptor_noexterior')) ?>
+                    <div id='error_receptor_noexterior' class='input_error'></div>
+
+                    <?php echo $this->formLabel($form->get('receptor_nointerior')) ?>
+                    <?php echo $this->formInput($form->get('receptor_nointerior')) . $this->formElementErrors($form->get('receptor_nointerior')) ?>
+                    <div id='error_receptor_nointerior' class='input_error'></div>
+
+                    <?php echo $this->formLabel($form->get('receptor_codigopostal')) ?>
+                    <?php echo $this->formInput($form->get('receptor_codigopostal')) . $this->formElementErrors($form->get('receptor_codigopostal')) ?>
+                    <div id='error_receptor_codigopostal' class='input_error'></div>
+
+                </div>
+
+                <div class="col">
+                    <?php echo $this->formLabel($form->get('receptor_colonia')) ?>
+                    <?php echo $this->formInput($form->get('receptor_colonia')) . $this->formElementErrors($form->get('receptor_colonia')) ?>
+                    <div id='error_receptor_colonia' class='input_error'></div>
+
+                    <?php echo $this->formLabel($form->get('receptor_estado')) ?>
+                    <br/>
+                    <?php echo $this->formSelect($form->get('receptor_estado')) . $this->formElementErrors($form->get('receptor_estado')) ?>
+                    <br/>
+
+                    <?php echo $this->formLabel($form->get('receptor_municipio')) ?>
+                    <br/>
+                    <?php echo $this->formSelect($form->get('receptor_municipio')) . $this->formElementErrors($form->get('receptor_municipio')) ?>
+                    <br/>
+                    
+                    <?php $form->get('receptor_pais')->setValue('Mexico') ?>
+                    <?php echo $this->formHidden($form->get('receptor_pais')) . $this->formElementErrors($form->get('receptor_pais')) ?>
+                    <p>(*) Obligatorio</p>
+                </div>
+
+                <div id="errorMessage2" class="errorMessage"></div>
+                <!--<button type="button" class="btn btn-primary">Guardar</button></p>-->
+            </section>
+
+            <h2>Datos de Envío</h2>
+            <section>
+                <p>     <div class="col">
+                    <?php echo $this->formLabel($form->get('envio_contacto')) ?>
+                    <?php echo $this->formInput($form->get('envio_contacto')) . $this->formElementErrors($form->get('envio_contacto')) ?>
+                    <div id='error_envio_contacto' class='input_error'></div>
+
+                    <?php echo $this->formLabel($form->get('envio_calle')) ?>
+                    <?php echo $this->formInput($form->get('envio_calle')) . $this->formElementErrors($form->get('envio_calle')) ?>
+                    <div id='error_envio_calle' class='input_error'></div>
+
+                    <?php echo $this->formLabel($form->get('envio_noexterior')) ?>
+                    <?php echo $this->formInput($form->get('envio_noexterior')) . $this->formElementErrors($form->get('envio_noexterior')) ?>
+                    <div id='error_envio_noexterior' class='input_error'></div>
+
+                    <?php echo $this->formLabel($form->get('envio_nointerior')) ?>
+                    <?php echo $this->formInput($form->get('envio_nointerior')) . $this->formElementErrors($form->get('envio_nointerior')) ?>
+                    <div id='error_envio_nointerior' class='input_error'></div>
+
+                    <?php echo $this->formLabel($form->get('envio_codigopostal')) ?>
+                    <?php echo $this->formInput($form->get('envio_codigopostal')) . $this->formElementErrors($form->get('envio_codigopostal')) ?>
+                    <div id='error_envio_codigopostal' class='input_error'></div>
+
+                    <?php echo $this->formLabel($form->get('envio_colonia')) ?>
+                    <?php echo $this->formInput($form->get('envio_colonia')) . $this->formElementErrors($form->get('envio_colonia')) ?>
+                    <div id='error_envio_colonia' class='input_error'></div>
+                </div>
+
+                <div class="col">
+                    <?php echo $this->formLabel($form->get('envio_estado')) ?>
+                    <br/>
+                    <?php echo $this->formSelect($form->get('envio_estado')) . $this->formElementErrors($form->get('envio_estado')) ?>
+                    <br/>
+
+                    <?php echo $this->formLabel($form->get('envio_municipio')) ?>
+                    <br/>
+                    <?php echo $this->formSelect($form->get('envio_municipio')) . $this->formElementErrors($form->get('envio_estado')) ?>
+                    <br/>
+                    
+                    <?php echo $this->formLabel($form->get('envio_crucecalles')) ?>
+                    <?php echo $this->formInput($form->get('envio_crucecalles')) . $this->formElementErrors($form->get('envio_crucecalles')) ?>
+                    <div id='error_envio_crucecalles' class='input_error'></div>
+
+                    <?php echo $this->formLabel($form->get('envio_telefono')) ?>
+                    <?php echo $this->formInput($form->get('envio_telefono')) . $this->formElementErrors($form->get('envio_telefono')) ?>
+                    <div id='error_envio_telefono' class='input_error'></div>
+
+                    <p>(*) Obligatorio</p>
+                </div>
+                <div id="errorMessage3" class="errorMessage"></div>
+                <!--<button type="button" class="btn btn-primary">Guardar</button></p>-->
+            </section> 
+
+
+
+            <h2>Términos y condiciones</h2>
+            <section>
+                <p>
+                    <?php echo $this->formLabel($form->get('acceptTerms')) ?>
+                    <?php echo $this->formCheckbox($form->get('acceptTerms')) . $this->formElementErrors($form->get('acceptTerms')) ?>
+                    <?php echo $this->formHidden($form->get('csrf')) ?>
+                    <div id="errorMessage4" class="errorMessage"></div>
+                </p>
+                <?php echo $this->formInput($submit) . $this->formElementErrors($submit) ?>
+
+            </section>        
+
+        </div>        
+        <?php echo $this->form()->closeTag() ?>
+        <input type='hidden' id='basepath' value='<?php echo $this->basePath() ?>'/>
+    </section>        <br>
+</div> <!-- /container --> 
+<script src="<?php echo $this->basePath('js/jquery.min.js') ?>"></script>
+<script src="<?php echo $this->basePath('js/registerscripts.js') ?>"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->basePath('css/register.css') ?>">
+<script src='<?php echo $this->basePath("js/register_loader.js") ?>'></script>
