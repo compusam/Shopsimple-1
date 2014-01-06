@@ -10,7 +10,9 @@
  */
 namespace Cshelperzfcuser\Model\Entity;
 
-class User{
+use ZfcUser\Entity\UserInterface as UserInterface;
+
+class User implements UserInterface{
     /**
      *
      * @var int 
