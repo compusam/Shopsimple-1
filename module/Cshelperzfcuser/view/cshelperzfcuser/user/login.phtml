@@ -41,6 +41,7 @@ $form->get('submit')->setLabel('Entrar');
         <label class="checkbox">
           <input type="checkbox" value="remember-me"> Recordar mis datos
         </label>
+        <?php echo $this->formHidden($form->get('csrf')) ?>
         <?php echo $this->formButton($form->get('submit')) ?>
       <!--<button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>-->
         <center><h4>¿Olvidaste tu contraseña?</h4></center>
