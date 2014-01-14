@@ -11,6 +11,7 @@ namespace Cscart\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Cscart\Form\Btncheckout;
 
 class IndexController extends AbstractActionController
 {    
@@ -21,6 +22,8 @@ class IndexController extends AbstractActionController
         $userid      = (int)$arrUSerinfo['id'];
         $productid      = (int)$this->getRequest()->getPost('product_id');
         $request = $this->getRequest();
+        
+        $formBtnCheckout = new Btncheckout();
         
         $core_service_cmf_cart= $this->getServiceLocator()
                 ->get('core_service_cmf_cart');
@@ -51,7 +54,13 @@ class IndexController extends AbstractActionController
         // obtener los creditos del ususario
         $credits = $this->getServiceLocator()->get('Cscore\Model\CreditsTable')->findId($arrUSerinfo['id']);
 
-        return new ViewModel(array('allcart'=>$allcart, 'credits'=>$credits));
+        return new ViewModel(
+                array(
+                    'allcart'=>$allcart, 
+                    'credits'=>$credits,
+                    'formBtnCheckout'=>$formBtnCheckout
+                    )
+                );
     }
     
    

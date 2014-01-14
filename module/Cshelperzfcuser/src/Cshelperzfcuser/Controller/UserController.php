@@ -9,10 +9,9 @@ use Zend\Stdlib\Parameters;
 use Zend\View\Model\ViewModel;
 use ZfcUser\Service\User as UserService;
 use ZfcUser\Options\UserControllerOptionsInterface;
-use Cshelperzfcuser\Model\RegisterFilter;
-use Cshelperzfcuser\Model\PerfilFilter;
+use Cshelperzfcuser\Form\Perfil;
+use Cshelperzfcuser\Form\PerfilValidator;
 use Zend\Crypt\Password\Bcrypt;
-use Cshelperzfcuser\Form\Validate as Validate;
 use Zend\Db\Sql\Where;
 
 class UserController extends AbstractActionController
@@ -94,7 +93,6 @@ class UserController extends AbstractActionController
         }
 
         $form->setData($request->getPost());
-        
         if (!$form->isValid()) {
             $this->flashMessenger()->setNamespace('zfcuser-login-form')->addMessage($this->failedLoginMessage);
             return $this->redirect()->toUrl($this->url()->fromRoute(static::ROUTE_LOGIN).($redirect ? '?redirect='.$redirect : ''));
@@ -288,140 +286,45 @@ class UserController extends AbstractActionController
      * @return \Zend\View\Model\ViewModel
      */
     public function miperfilAction(){  
-        $form = $this->getServiceLocator()->get('Cshelperzfcuser\Form\BasicUserInfo');
-        $form = $this->getServiceLocator()->get('Cshelperzfcuser\Service\CreateExtraFields')->addExtraFields($form);
-        
-        // obtener la lista de estados
-        $estados_table = $this->getServiceLocator()->get('Cshelperzfcuser\Model\EstadosTable');
-        $estados = $estados_table->fetchAll();
-        
-        // llenar el select de estados
-        $es = array();
-        foreach($estados as $estado){
-            $es[$estado['id']] = $estado['nombre'];
-        }
-        $form->get('receptor_estado')->setValueOptions($es);
-        $form->get('envio_estado')->setValueOptions($es);
-        
-        // obtener info del usuario logeado
-        $user = $this->getServiceLocator()->get('core_service_cmf_user')->getUser()->getBasicInfo();
-        
-        // obtener los valores para poner en el formulario
-        $form_data = array();
-        $form_data = $this->getServiceLocator()->get('Cshelperzfcuser\Service\GetFormData')->setData($form_data, $user['id']);
-        
         $request = $this->getRequest();
-        if($request->isPost()){
-            $post = $this->params()->fromPost();
-            // verificar si el password coincide con el password ingresado
-            $bcrypt = new Bcrypt();
-            $password_input = $post['password_actual'];
-            if(!$bcrypt->verify($password_input, $form_data['user']['password'])){
-                // mander mensaje de error 
-                return new ViewModel(array('form'=>$form, 'form_data'=>$form_data));
-            }else{
-                $is_valid = $this->getServiceLocator()->get('Cshelperzfcuser\Form\PerfilValidator')->validateForm($post);
-                if(!$is_valid){
-                    //para recibir los 3 formularios
-                    $regpost =  new PerfilFilter($post);
-                    $envio= $regpost->getEnvio();
-                    $receptor = $regpost->getReceptor();
-                    $usuario = $regpost->getUser();
-                   
-                    // actualizar tabla user
-                    $this->getServiceLocator()->get('Cshelperzfcuser\Model\UserTable')
-                                        ->updateUser($usuario, $user['id']);
-                    
-                    // actualizar tabla receptor
-                    $receptor_table = $this->getServiceLocator()->get('Cshelperzfcuser\Model\ReceptorTable');
-                    if(!$receptor_table->updateReceptor($receptor, $user['id'])){
-                        $re = $receptor_table->fetchOneById(array(
-                            'where'=>array('cscore_user_id'=>$user['id']),
-                            'order'=>'id ASC'
-                        ));
-                        if(empty($re)){
-                            // si no se encuentra el registro, insertarlo
-                            $receptor_table->insertRow($receptor, $user['id']);
-                        }   
-                    }
-                   
-                    $receptor_data =$receptor_table->fetchOneById(array('where'=>array('cscore_user_id'=>$user['id']),'order'=>'id ASC'));
-                    
-                    // actualizar table receptor_evio
-                    $receptor_envio_table = $this->getServiceLocator()->get('Cshelperzfcuser\Model\ReceptorenvioTable');
-                    if(!$receptor_envio_table->updateReceptorenvio($envio, $receptor_data['id'])){
-                        // si no se pudo actualizar verificar que exista el registro, si no, insertarlo
-                        $re = $receptor_envio_table->fetchOneById(array(
-                            'where'=>array('receptor_id'=>$receptor_data['id']),
-                            'order'=>'id ASC'
-                        ));
-                        if(empty($re)){
-                            // si no se encuentra el registro, insertarlo
-                            $receptor_envio_table->insertRow($envio, $receptor_data['id']);
-                        }
-                    }
-                    
-                    
-                    // verificar si se requiere actualizar el password 
-                    if($post['password_new'] != '' && $post['password_new_verify'] == $post['password_new']){
-                        $bcrypt = new Bcrypt();
-                        $securePass = $bcrypt->create($post['password_new']);
-                        $this->getServiceLocator()->get('Cshelperzfcuser\Model\UserTable')
-                                        ->updateUser(array('password'=>$securePass), $user['id']);
-                    }
-                    // obtener los valores para poner en el formulario
-                    $form_data = $this->getServiceLocator()->get('Cshelperzfcuser\Service\GetFormData')->setData($form_data, $user['id']);
-                    
-                    return new ViewModel(array('form'=>$form, 'form_data'=>$form_data));
+        $form = new Perfil();        
+        $message = null;
+        $susses = null;
+        $user = $this->getServiceLocator()
+                ->get('core_service_cmf_user')
+                ->getUser()->getBasicInfo();
+
+        $datauser = $this->getServiceLocator()
+                ->get('cshelperzfcuser_service_datauser');
+        $datauser->setForm($form); 
+        $form = $datauser->getForm();
+        if($request->isPost()){  
+            $formValidator = new PerfilValidator();
+            $form->setInputFilter($formValidator->getInputFilter()); 
+            $post = $request->getPost();
+            $form->setData($post);
+            if($form->isValid()){
+                if($datauser->verify($post->passwordactual)){
+                    $datauser->saveUserTable($post);
+                    $susses = 'Se Guardo correctamente';
+                    $message = null;
+                }else{
+                    $message = 'Tiene que Ingresar una Contraseña correcta para '.
+                            'Realizar Cambios';                   
                 }
-            }       
-        }
-               
-        return new ViewModel(array('form'=>$form, 'form_data'=>$form_data));
+            }else{
+                $message = 'Los Datos no son los esperados';
+            }
+        } 
+        
+        return new ViewModel(
+                    array(
+                        'formMiPerfil'=>$form,
+                        'message'=>$message,
+                        'susses'=>$susses
+                        )
+                    );
     }
-    
-    
-    public function getpoblacionesAction(){
-        $estado = $this->params()->fromRoute('estado');
-        $poblacion_table = $this->getServiceLocator()->get('Cshelperzfcuser\Model\PoblacionTable');
-        $poblaciones = $poblacion_table->findAllById(array(
-            'where'=>array('estado_id'=>$estado),
-            'order'=>'id ASC'
-        ));
-       
-        $response = new \Zend\Http\Response();
-        
-        $poblaciones_json = \Zend\Json\Json::encode($poblaciones, \Zend\Json\Json::TYPE_OBJECT);
-        
-        $response->setContent($poblaciones_json);
-        $response->getHeaders()->addHeaders(array(
-            'Content-Type' => 'application/json',
-        ));
-        return $response;
-    }
-    
-    public function verifypasswordAction(){
-        $user = $this->getServiceLocator()->get('core_service_cmf_user')->getUser()->getBasicInfo();
-        $user_table = $this->getServiceLocator()->get('Cshelperzfcuser\Model\UserTable')
-                    ->fetchOneById(array(
-                        'where'=>array('id'=>$user['id']),
-                        'order'=>'id ASC'
-                    ));
-        $post = $this->params()->fromPost();
-        // verificar si el password coincide con el password ingresado
-        $bcrypt = new Bcrypt();
-        $password_actual = $post['password_actual'];
-        
-        $response = new \Zend\Http\Response();
-        if(!$bcrypt->verify($password_actual, $user_table['password'])){
-            $response->setContent(false);
-        }else{
-            $response->setContent(true);
-        }
-        
-        return $response;
-    }
-    
     
     /**
      * Change the users password

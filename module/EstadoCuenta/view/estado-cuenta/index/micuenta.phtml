@@ -1,20 +1,9 @@
 <section class="container">
-    <h1 class="page-header">Estado de Cuenta. <small>Aquí está el desglose de tus joyas.</small></h1>
+    <h1 class="page-header">Estado de Cuenta. </h1>
 
     <div class="jumbotron">
         <ul class="list-group">
             <li class="list-group-item"> <h3>Nombre: <small><?php echo $this->user['displayName'] ?></small></h3></li>
-            <li class="list-group-item">
-                <h3>Dirección: 
-                    <small>
-                        <?php 
-                              echo array_key_exists('calle', $this->receptor) ? $this->receptor['calle'] : '';
-                              echo array_key_exists('no_exterior', $this->receptor) ?' #'.$this->receptor['no_exterior'] : '';
-                              echo array_key_exists('no_interior', $this->receptor) ?' Int. #'.$this->receptor['no_interior'] : '';
-                        ?>
-                    </small>
-                </h3>
-            </li>
             <li class="list-group-item"><h3>Email: <small><?php echo $this->user['email'] ?></small></h3></li>
 
         </ul>

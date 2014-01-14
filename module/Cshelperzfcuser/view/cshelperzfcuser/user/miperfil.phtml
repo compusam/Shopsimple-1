@@ -1,253 +1,55 @@
-<div class="container" style="padding-bottom: 40px;">
-    <section id="basic-form">
-        <h2 class="page-header">Registro</h2>
-        <h3>Puedes registrar tus datos.</h3>
-        <?php
-        $form = $this->form;
-        $form->prepare();
-        $form->setAttribute('action', $this->basePath('usuarios/miperfil'));
-        $form->setAttribute('method', 'post');
-        $form->setAttribute('id', 'form-2');
-        $submit = $form->get('submit');
-        $submit->setAttribute('class', 'btn btn-primary');
-        $submit->setAttribute('id', 'submit');
-        $submit->setValue('Guardar');
-        $form->get('username')->setAttribute('id', 'username');
-        $form->get('display_name')->setAttribute('id', 'display_name');
-        $form->get('password_new')->setAttribute('id', 'password_new');
-        $form->get('password_new_verify')->setAttribute('id', 'password_new_verify');
-        $form->get('email')->setAttribute('id', 'email');
+<section class="container">
+    <h2 class="page-header">Mi Perfil</h2>
+    <div class="jumbotron">
+        <?php if(!is_null($this->susses)):?>
+        <center><div class="alert alert-success"><span class="glyphicon glyphicon-ok"></span><?php echo ' '.$this->susses; ?></div></center>
+        <?php endif;?>        
+        <?php if(!is_null($this->message)):?>
+        <center><div class="alert alert-danger"><span class="glyphicon glyphicon-ban-circle"></span><?php echo ' '.$this->message; ?></div></center>
+        <?php endif;?>
+        <?php $form = $this->formMiPerfil;
+        $form->setAttribute('action',$this->basePath('usuarios/miperfil'));
         ?>
-
         <?php echo $this->form()->openTag($form) ?>
-        <div id="wizard">
-            <h2>Cuenta</h2>
-            <section>
-                <?php $form->get('username')->setValue( array_key_exists('username',$this->form_data['user']) ? $this->form_data['user']['username'] : '') ?>
-                <?php echo $this->formLabel($form->get('username')) ?>
-                <?php echo $this->formInput($form->get('username')) . $this->formElementErrors($form->get('username')) ?>
-                <div id='error_username' class='input_error'></div>
-                
-                <?php $form->get('email')->setValue( array_key_exists('email', $this->form_data['user']) ? $this->form_data['user']['email'] : '') ?>
-                <?php echo $this->formLabel($form->get('email')) ?>
-                <?php echo $this->formInput($form->get('email')) . $this->formElementErrors($form->get('email')) ?>
-                <div id='error_email' class='input_error'></div>
-                
-                <?php $form->get('display_name')->setValue( array_key_exists('display_name', $this->form_data['user']) ? $this->form_data['user']['display_name'] : '') ?>
-                <?php echo $this->formLabel($form->get('display_name')) ?>
-                <?php echo $this->formInput($form->get('display_name')) . $this->formElementErrors($form->get('display_name')) ?>
-                <div id='error_display_name' class='input_error'></div>
-                
-                <?php $form->get('password_actual')->setAttribute('placeholder', 'Ingrese su contraseña actual para poder cambiar sus datos') ?>
-                <?php $form->get('password_actual')->setAttribute('title', 'Ingrese su contraseña actual para poder cambiar sus datos') ?>
-                <?php echo $this->formLabel($form->get('password_actual')) ?>
-                <?php echo $this->formInput($form->get('password_actual')) . $this->formElementErrors($form->get('password_actual')) ?>
-                
-                <?php echo $this->formLabel($form->get('password_new')) ?>
-                <?php echo $this->formInput($form->get('password_new')) . $this->formElementErrors($form->get('password_new')) ?>
-                <div id="result"></div>
+            <div class="form-group">
+                <label for="username">Usuario</label>
+                <?php echo $this->formInput($form->get('username')) ?>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <?php echo $this->formInput($form->get('email')) ?>
+            </div> 
+            <div class="form-group">
+                <label for="displayname">Nombre</label>
+                <?php echo $this->formInput($form->get('displayname')) ?>
+            </div>       
+            <div class="form-group">
+                <label for="passwordactual">Contraseña actual</label>
+                <?php echo $this->formInput($form->get('passwordactual')) ?>
+            </div>         
+            <div class="form-group">
+                <label for="passwordnew">Contraseña nueva</label>
+                <?php echo $this->formInput($form->get('passwordnew')) ?>
+            </div>  
+            <div class="form-group">
+                <label for="passwordnewverify">Confirmar contraseña</label>
+                <?php echo $this->formInput($form->get('passwordnewverify')) ?>
+            </div>
+            <?php echo $this->formHidden($form->get('csrf')) ?>
+        <?php echo $this->formSubmit($form->get('btn_miperfil')) ?>
+        <?php echo $this->form()->closeTag() ?> 
+         
+    </div>    
 
-                <?php echo $this->formLabel($form->get('password_new_verify')) ?>
-                <?php echo $this->formInput($form->get('password_new_verify')) . $this->formElementErrors($form->get('password_new_verify')) ?>
-                <p>(*) Obligatorio</p>
+    <br>
+    <div class="jumbotron">
+        <center>
+            <p>Síguenos en nuestras redes sociales.</p>
+            <a href=""><img src="<?php echo $this->basePath() ?>/assets/img/fbk.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href=""><img src="<?php echo $this->basePath() ?>/assets/img/twi.png"></a><br>
 
-                <div id="errorMessage1" class="errorMessage"></div>       
-            </section> 
-
-
-            <h2>Datos de Facturación</h2>
-            <section>
-                <p>
-                <div class="col left">
-                    <?php $form->get('receptor_rfc')->setValue( array_key_exists('rfc', $this->form_data['receptor']) ? $this->form_data['receptor']['rfc'] : '' ) ?>
-                    <?php echo $this->formLabel($form->get('receptor_rfc')) ?>
-                    <?php echo $this->formInput($form->get('receptor_rfc')) . $this->formElementErrors($form->get('receptor_rfc')) ?>
-                    <div id='error_receptor_rfc' class='input_error'></div>
-                        
-                    <?php $form->get('receptor_nombre')->setValue( array_key_exists('nombre', $this->form_data['receptor']) ? $this->form_data['receptor']['nombre'] : '' ) ?>
-                    <?php echo $this->formLabel($form->get('receptor_nombre')) ?>
-                    <?php echo $this->formInput($form->get('receptor_nombre')) . $this->formElementErrors($form->get('receptor_nombre')) ?>
-                    <div id='error_receptor_nombre'></div>
-
-                    <?php $form->get('receptor_calle')->setValue( array_key_exists('calle', $this->form_data['receptor']) ? $this->form_data['receptor']['calle'] : '') ?>
-                    <?php echo $this->formLabel($form->get('receptor_calle')) ?>
-                    <?php echo $this->formInput($form->get('receptor_calle')) . $this->formElementErrors($form->get('receptor_calle')) ?>
-                    <div id='error_receptor_calle' class='input_error'></div>
-                    
-                    <?php $form->get('receptor_noexterior')->setValue( array_key_exists('no_exterior', $this->form_data['receptor']) ? $this->form_data['receptor']['no_exterior'] : '' ) ?>
-                    <?php echo $this->formLabel($form->get('receptor_noexterior')) ?>
-                    <?php echo $this->formInput($form->get('receptor_noexterior')) . $this->formElementErrors($form->get('receptor_noexterior')) ?>
-                    <div id='error_receptor_noexterior' class='input_error'></div>
-
-                    <?php $form->get('receptor_nointerior')->setValue( array_key_exists('no_interior', $this->form_data['receptor']) ? $this->form_data['receptor']['no_interior'] : '') ?>
-                    <?php echo $this->formLabel($form->get('receptor_nointerior')) ?>
-                    <?php echo $this->formInput($form->get('receptor_nointerior')) . $this->formElementErrors($form->get('receptor_nointerior')) ?>
-                    <div id='error_receptor_nointerior' class='input_error'></div>
-                    
-                    <?php $form->get('receptor_codigopostal')->setValue( array_key_exists('codigo_postal', $this->form_data['receptor']) ? $this->form_data['receptor']['codigo_postal'] : '') ?>
-                    <?php echo $this->formLabel($form->get('receptor_codigopostal')) ?>
-                    <?php echo $this->formInput($form->get('receptor_codigopostal')) . $this->formElementErrors($form->get('receptor_codigopostal')) ?>
-                    <div id='error_receptor_codigopostal' class='input_error'></div>
-
-                </div>
-
-                <div class="col rigth">
-                    <?php $form->get('receptor_colonia')->setValue( array_key_exists('colonia', $this->form_data['receptor']) ? $this->form_data['receptor']['colonia'] : '' ) ?>
-                    <?php echo $this->formLabel($form->get('receptor_colonia')) ?>
-                    <?php echo $this->formInput($form->get('receptor_colonia')) . $this->formElementErrors($form->get('receptor_colonia')) ?>
-                    <div id='error_receptor_colonia' class='input_error'></div>
-                    
-                    <?php $form->get('receptor_estado')->setValue( array_key_exists('estado', $this->form_data['receptor']) ? $this->form_data['receptor']['estado'] : '' ) ?>
-                    <?php echo $this->formLabel($form->get('receptor_estado')) ?>
-                    <br/>
-                    <?php echo $this->formSelect($form->get('receptor_estado')) . $this->formElementErrors($form->get('receptor_estado')) ?>
-                    <br/>
-                    <?php $form->get('receptor_municipio')->setValue( array_key_exists('municipio', $this->form_data['receptor']) ? $this->form_data['receptor']['municipio'] : '' ) ?>
-                    <input id="municipio_actual_receptor" type="hidden" value="<?php echo array_key_exists('municipio', $this->form_data['receptor']) ? $this->form_data['receptor']['municipio'] : '' ?>"/>
-                    <?php echo $this->formLabel($form->get('receptor_municipio')) ?>
-                    <br/>
-                    <?php echo $this->formSelect($form->get('receptor_municipio')) . $this->formElementErrors($form->get('receptor_municipio')) ?>
-                    <br/>
-                    
-                    <?php $form->get('receptor_pais')->setValue('Mexico') ?>
-                    <?php echo $this->formHidden($form->get('receptor_pais')) . $this->formElementErrors($form->get('receptor_pais')) ?>
-                    <p>(*) Obligatorio</p>
-                </div>
-
-                <div id="errorMessage2" class="errorMessage"></div>    
-                <!--<button type="button" class="btn btn-primary">Guardar</button></p>-->
-            </section>
-
-            <h2>Datos de Envío</h2>
-            <section>
-                <p>     
-                <div class="col left">
-                    <?php $form->get('envio_contacto')->setValue(array_key_exists('contacto', $this->form_data['receptor_envio']) ?  $this->form_data['receptor_envio']['contacto'] : '' ) ?>
-                    <?php echo $this->formLabel($form->get('envio_contacto')) ?>
-                    <?php echo $this->formInput($form->get('envio_contacto')) . $this->formElementErrors($form->get('envio_contacto')) ?>
-                    <div id='error_envio_contacto' class='input_error'></div>
-                    
-                    <?php $form->get('envio_calle')->setValue(array_key_exists('calle', $this->form_data['receptor_envio']) ? $this->form_data['receptor_envio']['calle'] : '')  ?>
-                    <?php echo $this->formLabel($form->get('envio_calle')) ?>
-                    <?php echo $this->formInput($form->get('envio_calle')) . $this->formElementErrors($form->get('envio_calle')) ?>
-                    <div id='error_envio_calle' class='input_error'></div>
-                    
-                    <?php $form->get('envio_noexterior')->setValue( array_key_exists('no_exterior',$this->form_data['receptor_envio']) ? $this->form_data['receptor_envio']['no_exterior'] : '') ?>
-                    <?php echo $this->formLabel($form->get('envio_noexterior')) ?>
-                    <?php echo $this->formInput($form->get('envio_noexterior')) . $this->formElementErrors($form->get('envio_noexterior')) ?>
-                    <div id='error_envio_noexterior' class='input_error'></div>
-                    
-                    <?php $form->get('envio_nointerior')->setValue( array_key_exists('no_interior', $this->form_data['receptor_envio']) ?  $this->form_data['receptor_envio']['no_interior'] : '') ?>
-                    <?php echo $this->formLabel($form->get('envio_nointerior')) ?>
-                    <?php echo $this->formInput($form->get('envio_nointerior')) . $this->formElementErrors($form->get('envio_nointerior')) ?>
-                    <div id='error_envio_nointerior' class='input_error'></div>
-                    
-                    <?php $form->get('envio_codigopostal')->setValue( array_key_exists('codigo_postal', $this->form_data['receptor_envio']) ? $this->form_data['receptor_envio']['codigo_postal'] : '') ?>
-                    <?php echo $this->formLabel($form->get('envio_codigopostal')) ?>
-                    <?php echo $this->formInput($form->get('envio_codigopostal')) . $this->formElementErrors($form->get('envio_codigopostal')) ?>
-                    <div id='error_envio_codigopostal' class='input_error'></div>
-                    
-                    <?php $form->get('envio_colonia')->setValue ( array_key_exists('colonia', $this->form_data['receptor_envio']) ? $this->form_data['receptor_envio']['colonia'] : '') ?>
-                    <?php echo $this->formLabel($form->get('envio_colonia')) ?>
-                    <?php echo $this->formInput($form->get('envio_colonia')) . $this->formElementErrors($form->get('envio_colonia')) ?>
-                    <div id='error_envio_colonia' class='input_error'></div>
-                </div>
-
-                <div class="col rigth">
-                    <?php $form->get('envio_estado')->setValue( array_key_exists('estado', $this->form_data['receptor_envio']) ? $this->form_data['receptor_envio']['estado'] : '') ?>
-                    <?php echo $this->formLabel($form->get('envio_estado')) ?>
-                    <br/>
-                    <?php echo $this->formSelect($form->get('envio_estado')) . $this->formElementErrors($form->get('envio_estado')) ?>
-                    <br/>
-                    
-                    <?php $form->get('envio_municipio')->setValue( array_key_exists('municipio', $this->form_data['receptor_envio']) ? $this->form_data['receptor_envio']['municipio'] : '') ?>
-                    <?php echo $this->formLabel($form->get('envio_municipio')) ?>
-                    <br/>
-                    <?php echo $this->formSelect($form->get('envio_municipio')) . $this->formElementErrors($form->get('envio_municipio')) ?>
-                    <br/>
-                    <input id="municipio_actual_envio" type="hidden" value="<?php echo array_key_exists('municipio', $this->form_data['receptor_envio']) ? $this->form_data['receptor_envio']['municipio'] : '' ?>"/>
-                    
-                    
-                    <?php $form->get('envio_crucecalles')->setValue( array_key_exists('cruce_calles', $this->form_data['receptor_envio'])  ? $this->form_data['receptor_envio']['cruce_calles'] : '') ?>
-                    <?php echo $this->formLabel($form->get('envio_crucecalles')) ?>
-                    <?php echo $this->formInput($form->get('envio_crucecalles')) . $this->formElementErrors($form->get('envio_crucecalles')) ?>
-                    <div id='error_envio_crucecalles' class='input_error'></div>
-                    
-                    <?php $form->get('envio_telefono')->setValue( array_key_exists('telefono', $this->form_data['receptor_envio']) ? $this->form_data['receptor_envio']['telefono'] : '') ?>
-                    <?php echo $this->formLabel($form->get('envio_telefono')) ?>
-                    <?php echo $this->formInput($form->get('envio_telefono')) . $this->formElementErrors($form->get('envio_telefono')) ?>
-                    <div id='error_envio_telefono' class='input_error'></div>
-
-                    <p>(*) Obligatorio</p>
-                </div>
-                <br><br>
-                <?php echo $this->formInput($form->get('csrf')) ?>
-                <?php echo $this->formInput($submit) . $this->formElementErrors($submit) ?>
-                <div id="errorMessage3" class="errorMessage"></div>
-            </section> 
-
-        </div>        
-        <?php echo $this->form()->closeTag() ?>
-        <input type='hidden' id='basepath' value='<?php echo $this->basePath() ?>'/>
-    </section>        <br>
-</div> <!-- /container --> 
-
-
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="<?php echo $this->basePath('js/miperfilscripts.js') ?>"></script> 
-
-<script>
-    $("#wizard").steps({
-        headerTag: "h2",
-        bodyTag: "section",
-        transitionEffect: "slideLeft"
-    });
-</script>
-<style>
-    .errorMessage{
-        color: red;
-        font-size: 1.2em;
-        width: 100%;
-        position: absolute;
-    }
-
-    #result{
-        position: absolute;
-        margin-top: -20px;
-        margin-left:190px;
-        width: 100px;
-    }
-    .short{
-        color:#FF0000;
-    }
-    .weak{
-        color:#E66C2C;
-    }
-    .good{
-        color:#2D98F3;
-    }
-    .strong{
-        color:#006400;
-    }
-    
-    .left{
-        width: 45%;
-        display: inline-block;
-    }
-    
-    .rigth{
-        width: 45%;
-        vertical-align: top;
-        display: inline-block;
-    }
-    #password_actual{
-        background-color: threedface;
-        border: 3px solid rgb(102, 157, 240);
-    }
-     .input_error{
-        color: red;
-    }
-</style>
-
+            <a href="">Instrucciones para la APP</a>&nbsp;&nbsp; | &nbsp;&nbsp;
+            <a href="">Términos y condiciones</a>
+        </center>
+    </div>
+</section> <!-- /container -->

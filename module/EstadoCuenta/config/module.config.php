@@ -23,17 +23,6 @@ return array(
                     ),
                 ),
             ),
-            'tickets_registrados' => array(
-                'type' => 'segment',
-                'options' => array(
-                    'route'    => '/tickets_registrados[/:page]',
-                    'defaults' => array(
-                        'controller' => 'EstadoCuenta\Controller\Index',
-                        'action'     => 'tickets',
-                        'page'=>1
-                    ),
-                ),
-            ),
         ),
     ),
     

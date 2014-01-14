@@ -39,8 +39,8 @@ return array(
     ),
     'db' => array(
                 'driver' => 'Pdo',
-                'dsn' => 'mysql:dbname=cscore;hostname=localhost',
-                'username' => 'cscore',
+                'dsn' => 'mysql:dbname=shopsimple_cscore;hostname=localhost',
+                'username' => 'root',
                 'password' => '',
                 'driver_options' => array(
                     PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
@@ -48,8 +48,8 @@ return array(
                 'adapters' => array(
                     'db1' => array(
                        'driver' => 'Pdo',
-                       'dsn' => 'mysql:dbname=mecanic;host=localhost',
-                       'username' => 'mecanic',
+                       'dsn' => 'mysql:dbname=shopsimple_mecanic;host=localhost',
+                       'username' => 'root',
                         'password' => '',
                        'driver_options'  => array(
                             PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''

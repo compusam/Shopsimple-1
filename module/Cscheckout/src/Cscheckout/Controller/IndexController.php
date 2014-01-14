@@ -11,15 +11,29 @@ namespace Cscheckout\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-
+use Cscart\Form\Btncheckout;
 class IndexController extends AbstractActionController
 {    
     
     public function checkoutAction(){
-        $viewModel  = new ViewModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
         $date = new \DateTime('now', new \DateTimeZone('America/Mexico_City')); 
         $now = (int) $date->getTimestamp();
+        
+        //validando csrf
+        $formBtnCheckout = new Btncheckout();
+        $formBtnCheckout->setData($request->getPost());
+        $viewModel  = new ViewModel();
+        if(!$formBtnCheckout->isValid()){
+            $response->setStatusCode(403); 
+            $viewModel->setTemplate('cscheckout/index/403.phtml'); 
+            return $viewModel;
+        }
+        //se maneja un try por que los fondos insuficientes genera una
+        //excepcion
         try{
+            //Llamando metodos de Cscore
             $core_service_cmf_credits = $this->getServiceLocator()
                     ->get('core_service_cmf_credits');
             $arrUSerinfo = $this->getBasicInfoService();
@@ -33,54 +47,31 @@ class IndexController extends AbstractActionController
                     ->getCreditByIdUser($arrUSerinfo['id']);        
             $paramsOrder = $cscheckout_service->getCheckout()
                                         ->setOrder($allCart,$wallet['credit']);
-
-            // obtener la informacion del receptor
-            $receptor_table = $this->getServiceLocator()->get('Cshelperzfcuser\Model\ReceptorTable');
-            $param = array(
-                'where'=>array('cscore_user_id'=>$arrUSerinfo['id']),
-                'order'=>'id ASC'
-            );
             
-            $receptor = $receptor_table->fetchOneById($param);
-            
+            //Verifica si se genero la orden para pagarla
             if(((int)$paramsOrder['order'])>0){
                 $core_service_cmf_credits->getCredits()->setCreditsPaid(
                         $arrUSerinfo['id'],((int)$paramsOrder['total']));
             }
-            
+            //setea valiables de vista
             $viewModel->setVariable('paramsOrder', array(
                 'order'=>$paramsOrder['order'],
                 'date'=>$paramsOrder['order_date'],
                 'usename'=>$arrUSerinfo['displayName'],
                 'allCart'=>$allCart
             ));
-            
-            $viewModel->setVariable('receptor', $receptor);
             $viewModel->setVariable('user', $arrUSerinfo);
             
         }  catch (\Exception $e){
                $arrUSerinfo = $this->getBasicInfoService();
-               // obtener la informacion del receptor
-                $receptor_table = $this->getServiceLocator()->get('Cshelperzfcuser\Model\ReceptorTable');
-                $param = array(
-                    'where'=>array('cscore_user_id'=>$arrUSerinfo['id']),
-                    'order'=>'id ASC'
-                );
-
-                $receptor = $receptor_table->fetchOneById($param);
                $viewModel->setVariable('paramsOrder', array(
                     'order'=>0,
                     'date'=>$now,
                     'usename'=>$e->getMessage(),
                     'allCart'=>array()
                 ));
-               
-               $viewModel->setVariable('receptor', $receptor);
                $viewModel->setVariable('user', $arrUSerinfo);
         }
-
-        
-        
         return $viewModel;
     }
     

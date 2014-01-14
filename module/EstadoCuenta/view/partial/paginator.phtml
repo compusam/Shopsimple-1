@@ -1,36 +1,25 @@
-<!--
-See http://developer.yahoo.com/ypatterns/pattern.php?pattern=searchpagination
--->
+<?php
+$url = $this->basePath('pedidos');
 
+?>
 <?php if ($this->pageCount): ?>
-<div class="paginationControl">
-<!-- Previous page link -->
-<?php if (isset($this->previous)): ?>
-  <a href="<?php echo $this->url($this->route, array('page' => $this->previous)); ?>">
-    < Previous
-  </a> |
-<?php else: ?>
-  <span class="disabled">< Previous</span> |
-<?php endif; ?>
-
-<!-- Numbered page links -->
-<?php foreach ($this->pagesInRange as $page): ?>
-  <?php if ($page != $this->current): ?>
-    <a href="<?php echo $this->url($this->route, array('page' => $page)); ?>">
-        <?php echo $page; ?>
-    </a> |
-  <?php else: ?>
-    <?php echo $page; ?> |
-  <?php endif; ?>
-<?php endforeach; ?>
-
-<!-- Next page link -->
-<?php if (isset($this->next)): ?>
-  <a href="<?php echo $this->url($this->route, array('page' => $this->next)); ?>">
-    Next >
-  </a>
-<?php else: ?>
-  <span class="disabled">Next ></span>
-<?php endif; ?>
-</div>
+<center>
+    <ul class="pagination">
+        <li<?php echo (isset($this->previous)) ? '' : " class='active'"; ?>>
+            <a href="<?php echo $url.'/1'; ?>">Principio</a></li>
+        <li<?php echo (isset($this->previous)) ? '' : " class='active'"; ?>>
+            <a href="<?php echo $url.'/'.$this->previous; ?>">Anterior</a></li>
+      <?php foreach ($this->pagesInRange as $page): ?>  
+          <li<?php echo ($page != $this->current) ? '' : " class='active'"; ?>>
+              <a href="<?php echo $url.'/'.$page; ?>"><?php echo $page; ?></a>
+          </li>
+      <?php endforeach; ?>
+        <li<?php echo (isset($this->next)) ? '' : " class='active'"; ?>>
+            <a href="<?php echo $url.'/'.$this->next; ?>" 
+               title="Siguiente"> Siguiente</a></li>
+      <li<?php echo (isset($this->next)) ? '' : " class='active'"; ?>>
+          <a href="<?php echo $url.'/'.$this->pageCount; ?>"  
+             title="Fin"> Ultimo</a></li>
+    </ul>
+</center>
 <?php endif; ?>

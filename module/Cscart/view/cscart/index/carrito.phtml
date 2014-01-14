@@ -45,9 +45,17 @@
             </div> 
             <div class="alert alert-info"><h2><b>Total:</b> <?php echo number_format($total, 0, '.', ','); ?></h2></div> 
         </center>
-        <div align="right">
-            <a href='<?php echo $this->basePath('categories') ?>' type="button" class="btn btn-primary">Agregar más premios</a>&nbsp;&nbsp;&nbsp;&nbsp;
-            <a class="btn btn-danger" href="<?php echo $this->basePath('checkout'); ?>">Checkout</a>
+        <div class="float_left">
+            <a href='<?php echo $this->basePath('categories') ?>' type="button" class="btn btn-primary ">Agregar más premios</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        <div>
+            <?php $form = $this->formBtnCheckout;
+                  $form->setAttribute('action',$this->basePath('checkout'));
+            ?>
+            <?php echo $this->form()->openTag($form) ?>
+            <?php echo $this->formHidden($form->get('csrf')) ?>
+            <?php echo $this->formSubmit($form->get('btn_checkout')) ?>
+            <?php echo $this->form()->closeTag() ?>             
             <br><br>
         </div>
         <?php if ($this->credits['credit'] < $total): ?>

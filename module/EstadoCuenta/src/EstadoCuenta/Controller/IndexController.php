@@ -36,16 +36,14 @@ class IndexController extends AbstractActionController
         $param = array(
             'where'=>array('cscore_user_id'=>$user['id']),
             'order'=>'id ASC'
-        );
-        $receptor = $this->getServiceLocator()->get('Cshelperzfcuser\Model\ReceptorTable')->fetchOneById($param);
+        );       
         
         return new ViewModel(
                 array(
                     'credits'=>$credits,
                     'payments'=>$payments,
                     'actuales'=>$credits_actuales['credit'],
-                    'user'=>$user,
-                    'receptor'=>$receptor
+                    'user'=>$user
                 )
         );
     }
