@@ -200,7 +200,7 @@ class UserController extends AbstractActionController
                 );
 
                 $UserTable->insert($data);
-                $susses = 'Se Guardo correctamente';
+                $susses = 'Se Registro correctamente';
                 $message = null;
             }else{
                 $message = 'Los Datos no son los esperados';
