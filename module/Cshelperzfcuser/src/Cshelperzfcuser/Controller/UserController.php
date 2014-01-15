@@ -5,13 +5,14 @@ namespace Cshelperzfcuser\Controller;
 use Zend\Form\Form;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Stdlib\ResponseInterface as Response;
-use Zend\Stdlib\Parameters;
+use Zend\Crypt\Password\Bcrypt;
 use Zend\View\Model\ViewModel;
 use ZfcUser\Service\User as UserService;
 use ZfcUser\Options\UserControllerOptionsInterface;
 use Cshelperzfcuser\Form\Perfil;
 use Cshelperzfcuser\Form\PerfilValidator;
-use Zend\Crypt\Password\Bcrypt;
+use Cshelperzfcuser\Form\Registrar;
+use Cshelperzfcuser\Form\RegistrarValidator;
 use Zend\Db\Sql\Where;
 
 class UserController extends AbstractActionController
@@ -173,112 +174,46 @@ class UserController extends AbstractActionController
         }
         
         $request = $this->getRequest();
-        $service = $this->getUserService();
-        
-        $form = $this->getRegisterForm();
-        $form  = $this->getServiceLocator()->get('Cshelperzfcuser\Service\CreateExtraFields')->addExtraFields($form);
-        
+        $form = new Registrar();        
+        $message = null;
+        $susses = null;
+        if($request->isPost()){  
+            $formValidator = new RegistrarValidator();
+            $form->setInputFilter($formValidator->getInputFilter()); 
+            $post = $request->getPost();
+            $form->setData($post);
+            if($form->isValid()){
+                $UserTable = $this->getServiceLocator()
+                        ->get('Cshelperzfcuser\Model\UserTable');
+                $bcrypt = new Bcrypt();
+                $zfcuser_module_options = $this->getServiceLocator()
+                    ->get('zfcuser_module_options');
+                $bcrypt->setCost($zfcuser_module_options->getPasswordCost()); 
+                $password= $bcrypt->create($post->passwordnew);                
+                $data = array(
+                    'username'=>$post->username,
+                    'email'=>$post->email,
+                    'display_name'=>$post->displayname,
+                    'password'=>$password,
+                    'state'=>1,
+                    'gid'=>1
+                );
 
-        // obtener la lista de estados
-        $estados_table = $this->getServiceLocator()->get('Cshelperzfcuser\Model\EstadosTable');
-        $estados = $estados_table->fetchAll();
-        
-        // llenar el select de estados
-        $es = array();
-        $es[''] = '---Selecciona---';
-        foreach($estados as $estado){
-            $es[$estado['id']] = $estado['nombre'];
-        }
-        $form->get('receptor_estado')->setValueOptions($es);
-        $form->get('envio_estado')->setValueOptions($es);
-        
-        if ($this->getOptions()->getUseRedirectParameterIfPresent() && $request->getQuery()->get('redirect')) {
-            $redirect = $request->getQuery()->get('redirect');
-        } else {
-            $redirect = false;
-        }
-
-        $redirectUrl = $this->url()->fromRoute(static::ROUTE_REGISTER)
-            . ($redirect ? '?redirect=' . $redirect : '');
-        $prg = $this->prg($redirectUrl, true);
-
-        if ($prg instanceof Response) {
-            return $prg;
-        } elseif ($prg === false) {
-            return array(
-                'registerForm' => $form,
-                'enableRegistration' => $this->getOptions()->getEnableRegistration(),
-                'redirect' => $redirect,
-            );
-        }
-
-        $post = $prg;
-        
-        $is_valid = $this->getServiceLocator()->get('Cshelperzfcuser\Form\RegisterValidator')->validateForm($post);
-        if(!$is_valid){
-            return array(
-                'registerForm' => $form,
-                'enableRegistration' => $this->getOptions()->getEnableRegistration(),
-                'redirect' => $redirect,
-            );
-        }
-        //para recibir los 3 formularios
-        $regpost =  new RegisterFilter($post);
-        $envio= $regpost->getEnvio();
-        $receptor = $regpost->getReceptor();
-        $post = $regpost->getUser();
-        
-        // encriptar password
-        $bcrypt = new Bcrypt();
-        $securePass = $bcrypt->create($post['password']);
-        $post['password'] = $securePass;
-        
-        $user = $this->getServiceLocator()->get('Cshelperzfcuser\Model\UserTable')->insertRow($post);
-        //$user = $service->register($post);
-        
-        if (!$user) {
-            return array(
-                'registerForm' => $form,
-                'enableRegistration' => $this->getOptions()->getEnableRegistration(),
-                'redirect' => $redirect,
-            );
-        }
-        
-        $UserTable = $this->getServiceLocator()
-                ->get('Cshelperzfcuser\Model\UserTable');
-        $ReceptorTable = $this->getServiceLocator()
-                ->get('Cshelperzfcuser\Model\ReceptorTable');
-        $ReceptorenvioTable = $this->getServiceLocator()
-                ->get('Cshelperzfcuser\Model\ReceptorenvioTable');
-        
-        $user = $UserTable->fetchOneById(array(
-            'where'=>array('username'=>$post['username']),
-            'order'=>'id ASC'
-        ));
-        
-        $receptor['cscore_user_id']=$user['id'];
-        $ReceptorTable->insert($receptor);
-        $envio['receptor_id']=$ReceptorTable->lastInsertValue;
-        $ReceptorenvioTable->insert($envio);
-        
-        
-        $redirect = isset($prg['redirect']) ? $prg['redirect'] : null;
-
-      
-        if ($service->getOptions()->getLoginAfterRegistration()){
-            $identityFields = $service->getOptions()->getAuthIdentityFields();
-            if (in_array('email', $identityFields)) {
-                $post['identity'] = $user->getEmail();
-            } elseif (in_array('username', $identityFields)) {
-                $post['identity'] = $post['username'];
+                $UserTable->insert($data);
+                $susses = 'Se Guardo correctamente';
+                $message = null;
+            }else{
+                $message = 'Los Datos no son los esperados';
             }
-            $post['credential'] = $post['password'];
-            $request->setPost(new Parameters($post));
-            return $this->forward()->dispatch(static::CONTROLLER_NAME, array('action' => 'authenticate'));
-        }
-
-        // TODO: Add the redirect parameter here...
-        return $this->redirect()->toRoute('cshelperzfcuser/activate');
+        } 
+        
+        return new ViewModel(
+                    array(
+                        'formRegistrar'=>$form,
+                        'message'=>$message,
+                        'susses'=>$susses
+                        )
+                    );
     }
     
     /**
